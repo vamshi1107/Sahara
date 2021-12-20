@@ -4,24 +4,34 @@ import 'package:myapp/components/topbar.dart';
 import 'package:myapp/components/topbar_secondary.dart';
 
 class Category extends StatefulWidget {
+  StatefulWidget TopBar;
+
+  Category(StatefulWidget this.TopBar);
   @override
   State<Category> createState() {
     // TODO: implement createState
-    return CategoryState();
+    return CategoryState(TopBar);
   }
 }
 
 class CategoryState extends State<Category> {
-  CategoryState() {}
+  StatefulWidget TopBar;
+
+  CategoryState(StatefulWidget this.TopBar) {}
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-        flex: 2,
-        child: Container(
-          width: double.infinity,
-          height: 200,
-          color: inner,
-        ));
+    return Column(
+      children: [
+        TopBar,
+        Expanded(
+            flex: 2,
+            child: Container(
+              width: double.infinity,
+              height: 200,
+              color: inner,
+            ))
+      ],
+    );
   }
 }

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:myapp/screen.dart';
+import 'package:myapp/pages/splash.dart';
 
-void main() {
+Future<void> main() async {
   runApp(
     MaterialApp(
-      home: Scaffold(body: Screen()),
+      home: Splash(),
       debugShowCheckedModeBanner: false,
     ),
   );

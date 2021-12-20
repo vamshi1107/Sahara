@@ -31,13 +31,13 @@ class SearchState extends State<Search> {
       [
         "https://images-eu.ssl-images-amazon.com/images/G/31/img21/Wireless/katariy/Apple/Family_stripe/AMZ_FamilyStripe_iPhone_13ProMax._CB640925209_.png",
         "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS77kge8fheZqbnerRzPBqvF-lAy9Mg2ivYRQ&usqp=CAU",
-        "https://www.apple.com/newsroom/images/product/iphone/standard/Apple_iPhone-13-Pro_New-Camera-System_09142021_Full-Bleed-Image.jpg.large_2x.jpg"
       ],
       "12500");
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
+    return Scaffold(
+        body: Column(children: [
       SearchTopBar(),
       Expanded(
           child: CustomScrollView(
@@ -70,7 +70,7 @@ class SearchState extends State<Search> {
           ),
         ],
       ))
-    ]);
+    ]));
   }
 
   void show(BuildContext context, Product p) {
@@ -100,8 +100,6 @@ class SearchState extends State<Search> {
                     return Container(
                       child: Image.network(
                         p.image[i],
-                        height: 300,
-                        width: 300,
                       ),
                     );
                   },
@@ -121,12 +119,12 @@ class SearchState extends State<Search> {
                   children: [
                     RaisedButton(
                       child: Text("Details"),
-                      onPressed: () => {this.press(context)},
+                      onPressed: () => {this.press(context, p)},
                     ),
                     RaisedButton(
                       color: Colors.yellow,
                       child: Text("Add to Cart"),
-                      onPressed: () => {this.press(context)},
+                      onPressed: () => {this.press(context, p)},
                     ),
                   ],
                 )
@@ -136,10 +134,10 @@ class SearchState extends State<Search> {
         });
   }
 
-  void press(BuildContext context) {
+  void press(BuildContext context, Product p) {
     Navigator.pop(context);
     Navigator.push(context, MaterialPageRoute(builder: (context) {
-      return Details();
+      return Details(p);
     }));
   }
 }

@@ -6,14 +6,20 @@ import 'package:myapp/components/topbar_secondary.dart';
 import 'search.dart';
 
 class Home extends StatefulWidget {
+  StatefulWidget TopBarSecondary;
+
+  Home(StatefulWidget this.TopBarSecondary);
+
   @override
   State<Home> createState() {
-    return HomeState();
+    return HomeState(TopBarSecondary);
   }
 }
 
 class HomeState extends State<Home> {
-  HomeState() {}
+  StatefulWidget TopBarSecondary;
+
+  HomeState(StatefulWidget this.TopBarSecondary) {}
 
   void openSearch(BuildContext context) {
     Navigator.push(context, MaterialPageRoute(builder: (context) => Search()));
@@ -21,29 +27,34 @@ class HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-        flex: 2,
-        child: CustomScrollView(
-          slivers: [
-            SliverToBoxAdapter(
-              child: Column(
-                children: [
-                  Container(
-                    height: 300,
-                    color: Colors.green,
+    return Column(
+      children: [
+        TopBarSecondary,
+        Expanded(
+            flex: 2,
+            child: CustomScrollView(
+              slivers: [
+                SliverToBoxAdapter(
+                  child: Column(
+                    children: [
+                      Container(
+                        height: 300,
+                        color: Colors.green,
+                      ),
+                      Container(
+                        height: 300,
+                        color: inner,
+                      ),
+                      Container(
+                        height: 300,
+                        color: inner,
+                      )
+                    ],
                   ),
-                  Container(
-                    height: 300,
-                    color: inner,
-                  ),
-                  Container(
-                    height: 300,
-                    color: inner,
-                  )
-                ],
-              ),
-            )
-          ],
-        ));
+                )
+              ],
+            ))
+      ],
+    );
   }
 }

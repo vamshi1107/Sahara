@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:myapp/assests/colors.dart';
 import 'package:myapp/assests/icons.dart';
 import 'package:myapp/components/topbar.dart';
+import 'package:myapp/components/topbar3.dart';
 import 'package:myapp/components/topbar_secondary.dart';
 import 'package:myapp/pages/categories.dart';
 import 'package:myapp/pages/search.dart';
@@ -18,8 +19,6 @@ class Screen extends StatefulWidget {
 }
 
 class ScreenState extends State<Screen> {
-  var pages = [Home(), Category(), Account(), Cart(), Search()];
-
   var states = [true, false, false, false];
 
   ScreenState() {}
@@ -31,6 +30,14 @@ class ScreenState extends State<Screen> {
       current = 4;
     });
   }
+
+  var pages = [
+    Home(TopBarMain()),
+    Category(TopBarMain()),
+    Account(TopBarMain()),
+    Cart(TopBarMain()),
+    Search()
+  ];
 
   void change(int i) {
     setState(() {
@@ -60,9 +67,14 @@ class ScreenState extends State<Screen> {
         Container(
           width: double.infinity,
           height: MediaQuery.of(context).size.height * 0.90,
-          child: current < 4
-              ? Column(children: [TopBarSecondary(setSearch), pages[current]])
-              : pages[current],
+          child: IndexedStack(
+            index: current,
+            children: pages,
+          ),
+          //   child: current < 4
+          //       ? Column(children: [TopBarSecondary(setSearch), pages[current]])
+          //       : pages[current],
+          // )
         ),
         BottomNav()
       ],

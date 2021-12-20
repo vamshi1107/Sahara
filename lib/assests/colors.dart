@@ -17,5 +17,5 @@ Color itemSelected = Colors.black;
 Color iconColor = Colors.black;
 
 //Elements
-Color itemInner = Colors.white10;
-Color itemBorder = Colors.grey;
+Color itemInner = Color.fromRGBO(220, 220, 220, 99);
+Color itemBorder = Color.fromRGBO(220, 220, 220, 99);

@@ -37,6 +37,17 @@ class SearchTopBarState extends State<SearchTopBar> {
                       Flexible(
                           flex: 1,
                           child: Container(
+                            padding: EdgeInsets.fromLTRB(0, 50, 0, 0),
+                            child: IconButton(
+                              icon: Icon(Icons.arrow_back),
+                              onPressed: () {
+                                back(context);
+                              },
+                            ),
+                          )),
+                      Flexible(
+                          flex: 4,
+                          child: Container(
                               width: MediaQuery.of(context).size.width * 0.8,
                               decoration: BoxDecoration(
                                   color: inner,

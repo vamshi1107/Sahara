@@ -53,7 +53,7 @@ class ItemState extends State<Item> {
                     fontWeight: FontWeight.bold,
                     fontStyle: FontStyle.normal),
               ),
-              const SizedBox(height: 45),
+              const SizedBox(height: 25),
               Text(
                 i.price,
                 style: const TextStyle(
@@ -61,6 +61,18 @@ class ItemState extends State<Item> {
                     fontWeight: FontWeight.bold,
                     fontStyle: FontStyle.normal),
               ),
+              SizedBox(
+                height: 10,
+              ),
+              ElevatedButton(
+                  onPressed: () {},
+                  child: Text(
+                    "Add to cart",
+                    style: TextStyle(color: Colors.black),
+                  ),
+                  style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                          (states) => Colors.yellowAccent))),
             ],
           )
         ],
