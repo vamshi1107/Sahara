@@ -29,33 +29,24 @@ class AccountState extends State<Account> {
         flex: 2,
         child: CustomScrollView(slivers: [
           SliverToBoxAdapter(
-              child: Container(
-                  width: double.infinity,
-                  color: inner,
-                  child: Column(
-                    children: [
-                      Container(
-                        width: double.infinity,
-                        height: 600,
-                        color: inner,
-                      ),
-                      MaterialButton(
-                        color: Colors.black,
-                        onPressed: () {
-                          logout();
-                        },
-                        child: Container(
-                          child: Center(
-                              child: Text(
-                            "Logout",
-                            style: TextStyle(color: Colors.white),
-                          )),
-                          height: 50,
-                          width: MediaQuery.of(context).size.width * 0.85,
-                        ),
-                      ),
-                    ],
-                  ))),
+            child: Container(
+                width: double.infinity,
+                color: inner,
+                child: FutureBuilder(
+                  future: islogged(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      if (snapshot.data == true) {
+                        return layout();
+                      } else {
+                        return notLogged();
+                      }
+                    } else {
+                      return notLogged();
+                    }
+                  },
+                )),
+          )
         ]),
       )
     ]);
@@ -63,11 +54,76 @@ class AccountState extends State<Account> {
 
   Future<void> logout() async {
     SharedPreferences s = await SharedPreferences.getInstance();
-    s.remove("username");
+    s.clear();
     Navigator.pushReplacement(context, MaterialPageRoute(
       builder: (context) {
         return Login();
       },
     ));
+  }
+
+  Future<bool> islogged() async {
+    SharedPreferences s = await SharedPreferences.getInstance();
+    return s.containsKey("user");
+  }
+
+  void login() {
+    Navigator.push(context, MaterialPageRoute(
+      builder: (context) {
+        return Login();
+      },
+    ));
+  }
+
+  Widget notLogged() {
+    return Container(
+      width: double.infinity,
+      height: 600,
+      color: inner,
+      child: Center(
+        child: MaterialButton(
+          color: Colors.black,
+          onPressed: () {
+            login();
+          },
+          child: Container(
+            child: Center(
+                child: Text(
+              "Login",
+              style: TextStyle(color: Colors.white),
+            )),
+            height: 50,
+            width: MediaQuery.of(context).size.width * 0.85,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget layout() {
+    return Column(
+      children: [
+        Container(
+          width: double.infinity,
+          height: 600,
+          color: inner,
+        ),
+        MaterialButton(
+          color: Colors.black,
+          onPressed: () {
+            logout();
+          },
+          child: Container(
+            child: Center(
+                child: Text(
+              "Logout",
+              style: TextStyle(color: Colors.white),
+            )),
+            height: 50,
+            width: MediaQuery.of(context).size.width * 0.85,
+          ),
+        ),
+      ],
+    );
   }
 }

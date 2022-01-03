@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:myapp/api/client.dart';
 import 'package:myapp/pages/signup.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -41,7 +42,7 @@ class _LoginState extends State<Login> {
                 Container(
                   margin: EdgeInsets.all(10),
                   child: MaterialButton(
-                    color: Colors.grey[100],
+                    color: Colors.black,
                     onPressed: () {
                       logUser();
                     },
@@ -49,38 +50,35 @@ class _LoginState extends State<Login> {
                       child: Center(
                           child: Text("Login",
                               style: GoogleFonts.roboto(
-                                textStyle: TextStyle(color: Colors.black),
-                                fontSize: 16,
-                              ))),
+                                  textStyle: TextStyle(color: Colors.black),
+                                  fontSize: 16,
+                                  color: Colors.white))),
                       height: 50,
                       width: MediaQuery.of(context).size.width * 0.85,
                     ),
                   ),
                 ),
                 Container(
-                  margin: EdgeInsets.all(10),
-                  child: MaterialButton(
-                    color: Colors.black,
-                    onPressed: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) {
-                        return Signup();
-                      }));
-                    },
-                    child: Container(
-                      child: Center(
-                          child: Text(
-                        "Sign up",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
+                    margin: EdgeInsets.all(10),
+                    child: GestureDetector(
+                        child: Container(
+                          child: Center(
+                              child: Text(
+                            "Create account",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 16,
+                            ),
+                          )),
+                          height: 50,
+                          width: MediaQuery.of(context).size.width * 0.85,
                         ),
-                      )),
-                      height: 50,
-                      width: MediaQuery.of(context).size.width * 0.85,
-                    ),
-                  ),
-                )
+                        onTap: () {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            return Signup();
+                          }));
+                        }))
               ],
             ),
           )
@@ -102,17 +100,40 @@ class _LoginState extends State<Login> {
   }
 
   void logUser() async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
-
+    var api = API();
     String user = _username.text.toString();
     String pass = _password.text.toString();
     if (user.length > 4 && pass.length > 6) {
-      pref.setString("username", user);
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
-        return Scaffold(
-          body: Screen(),
-        );
-      }));
+      await api.userLogin({"user": user, "pass": pass}).then((value) async {
+        if (value["user"] != null) {
+          save(value).then((value) {
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) {
+              return Scaffold(
+                body: Screen(),
+              );
+            }));
+          });
+        } else {
+          showSnackbar("Invalid Username or password", Colors.red);
+        }
+      });
     }
+  }
+
+  Future<bool> save(var value) async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    pref.setString("user", value["user"]);
+    pref.setString("name", value["name"]);
+    return true;
+  }
+
+  void showSnackbar(String msg, Color color) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Container(
+        child: Text(msg),
+      ),
+      backgroundColor: color,
+    ));
   }
 }

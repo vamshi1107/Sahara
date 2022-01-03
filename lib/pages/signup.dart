@@ -1,7 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-import '../screen.dart';
+import 'package:http/http.dart';
+import 'package:myapp/api/client.dart';
 
 class Signup extends StatefulWidget {
   Signup({Key? key}) : super(key: key);
@@ -47,7 +49,7 @@ class _SignupState extends State<Signup> {
                     child: Container(
                       child: Center(
                           child: Text(
-                        "Sign up",
+                        "Create",
                         style: TextStyle(color: Colors.white),
                       )),
                       height: 50,
@@ -75,9 +77,27 @@ class _SignupState extends State<Signup> {
     );
   }
 
-  void signUser() {
-    Navigator.pop(context);
+  void signUser() async {
+    String name = _name.text.toString();
     String user = _username.text.toString();
     String pass = _password.text.toString();
+    var api = API();
+    api.userSignup({"name": name, "user": user, "pass": pass}).then((value) {
+      if (value) {
+        showSnackbar("Signup successfull", Colors.black);
+        Navigator.pop(context);
+      } else {
+        showSnackbar("Unable to signup", Colors.red);
+      }
+    });
+  }
+
+  void showSnackbar(String msg, Color color) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Container(
+        child: Text(msg),
+      ),
+      backgroundColor: color,
+    ));
   }
 }

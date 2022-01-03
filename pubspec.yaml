@@ -31,9 +31,10 @@ dependencies:
   cupertino_icons: ^1.0.2
   flutter:
     sdk: flutter
-  http: ^0.13.4
-  shared_preferences: ^2.0.9
   google_fonts: ^2.1.0
+  http: ^0.13.4
+  pinch_zoom: ^1.0.0
+  shared_preferences: ^2.0.9
 
 dev_dependencies:
   carousel_slider: ^4.0.0

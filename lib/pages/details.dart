@@ -4,6 +4,7 @@ import 'package:myapp/components/details_topbar.dart';
 
 import 'package:myapp/models/product.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:pinch_zoom/pinch_zoom.dart';
 
 import 'account.dart';
 
@@ -56,19 +57,19 @@ class _DetailsState extends State<Details> {
                         ),
                       ),
                       CarouselSlider.builder(
-                        itemCount: p.image.length,
+                        itemCount: p.images.length,
                         options: CarouselOptions(
                             enlargeCenterPage: true,
                             height: 350,
                             reverse: false,
                             enableInfiniteScroll: false,
-                            autoPlay: true,
+                            autoPlay: false,
                             autoPlayAnimationDuration:
                                 Duration(milliseconds: 300)),
                         itemBuilder: (context, i, r) {
                           return Container(
                             child: Image.network(
-                              p.image[i],
+                              p.images[i],
                             ),
                           );
                         },

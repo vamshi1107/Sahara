@@ -30,10 +30,13 @@ class ItemState extends State<Item> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          Image.network(
-            i.image[0],
-            height: 200,
-            width: 200,
+          Container(
+            width: 150,
+            height: 150,
+            margin: EdgeInsets.all(10),
+            child: Image.network(
+              i.images[0],
+            ),
           ),
           Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -72,7 +75,7 @@ class ItemState extends State<Item> {
                   ),
                   style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                          (states) => Colors.yellowAccent))),
+                          (states) => Colors.white))),
             ],
           )
         ],

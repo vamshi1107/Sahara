@@ -36,7 +36,7 @@ class _SplashState extends State<Splash> {
 
   void timer(BuildContext context) async {
     SharedPreferences s = await SharedPreferences.getInstance();
-    var name = s.get("username");
+    var name = s.get("user");
     Timer(Duration(milliseconds: 1500), () {
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
         if (name != null) {

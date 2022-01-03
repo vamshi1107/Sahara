@@ -1,6 +1,7 @@
 import 'dart:ffi';
 
 import 'package:flutter/material.dart';
+import 'package:myapp/api/client.dart';
 import 'package:myapp/assests/colors.dart';
 import 'package:myapp/components/item.dart';
 import 'package:myapp/components/search_topbar.dart';
@@ -12,7 +13,6 @@ import 'package:myapp/pages/details.dart';
 class Search extends StatefulWidget {
   @override
   State<Search> createState() {
-    // TODO: implement createState
     return SearchState();
   }
 }
@@ -20,54 +20,44 @@ class Search extends StatefulWidget {
 class SearchState extends State<Search> {
   SearchState() {}
 
+  TextEditingController searchController = new TextEditingController();
+
+  List products = [];
+
+  @override
+  void initState() {
+    super.initState();
+    var api = API();
+    setState(() {
+      api.getProducts({}).then((value) {
+        products = value;
+      });
+    });
+  }
+
   void back(BuildContext context) {
     Navigator.pop(context);
   }
 
-  var p = Product(
-      01,
-      "Iphone 12 pro",
-      "Apple",
-      [
-        "https://images-eu.ssl-images-amazon.com/images/G/31/img21/Wireless/katariy/Apple/Family_stripe/AMZ_FamilyStripe_iPhone_13ProMax._CB640925209_.png",
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS77kge8fheZqbnerRzPBqvF-lAy9Mg2ivYRQ&usqp=CAU",
-      ],
-      "12500");
+  var searchResults = [];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: Column(children: [
-      SearchTopBar(),
+      topBar(),
       Expanded(
           child: CustomScrollView(
         slivers: [
-          SliverToBoxAdapter(
-            child: Column(
-              children: [
-                InkWell(
-                  child: Item(p),
-                  onTap: () => {show(context, p)},
-                ),
-                InkWell(
-                  child: Item(p),
-                  onTap: () => {show(context, p)},
-                ),
-                InkWell(
-                  child: Item(p),
-                  onTap: () => {show(context, p)},
-                ),
-                InkWell(
-                  child: Item(p),
-                  onTap: () => {show(context, p)},
-                ),
-                InkWell(
-                  child: Item(p),
-                  onTap: () => {show(context, p)},
-                ),
-              ],
-            ),
-          ),
+          SliverList(
+              delegate: SliverChildListDelegate(
+            searchResults.map((e) {
+              return GestureDetector(
+                child: Item(e),
+                onTap: () => {show(context, e)},
+              );
+            }).toList(),
+          ))
         ],
       ))
     ]));
@@ -89,7 +79,7 @@ class SearchState extends State<Search> {
                       fontStyle: FontStyle.normal),
                 ),
                 CarouselSlider.builder(
-                  itemCount: p.image.length,
+                  itemCount: p.images.length,
                   options: CarouselOptions(
                       enlargeCenterPage: true,
                       reverse: false,
@@ -99,7 +89,7 @@ class SearchState extends State<Search> {
                   itemBuilder: (context, i, r) {
                     return Container(
                       child: Image.network(
-                        p.image[i],
+                        p.images[i],
                       ),
                     );
                   },
@@ -117,12 +107,19 @@ class SearchState extends State<Search> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    RaisedButton(
+                    ElevatedButton(
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all<Color>(Colors.grey),
+                      ),
                       child: Text("Details"),
                       onPressed: () => {this.press(context, p)},
                     ),
-                    RaisedButton(
-                      color: Colors.yellow,
+                    ElevatedButton(
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all<Color>(Colors.blue),
+                      ),
                       child: Text("Add to Cart"),
                       onPressed: () => {this.press(context, p)},
                     ),
@@ -139,5 +136,70 @@ class SearchState extends State<Search> {
     Navigator.push(context, MaterialPageRoute(builder: (context) {
       return Details(p);
     }));
+  }
+
+  void onSearch(var value) {
+    if (value.replaceAll(" ", "").length > 0) {
+      var searched = products
+          .where((product) => product.name
+              .replaceAll(" ", "")
+              .toLowerCase()
+              .contains(value.replaceAll(" ", "").toLowerCase()))
+          .toList();
+      setState(() {
+        searchResults = searched;
+      });
+    } else {
+      setState(() {
+        searchResults = [];
+      });
+    }
+  }
+
+  Widget topBar() {
+    return Stack(
+      children: [
+        Positioned(
+            child: Container(
+                width: double.infinity,
+                height: 110,
+                color: primary,
+                child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Flexible(
+                          flex: 1,
+                          child: Container(
+                            padding: EdgeInsets.fromLTRB(0, 50, 0, 0),
+                            child: IconButton(
+                              icon: Icon(Icons.arrow_back),
+                              onPressed: () {
+                                back(context);
+                              },
+                            ),
+                          )),
+                      Flexible(
+                          flex: 4,
+                          child: Container(
+                              width: MediaQuery.of(context).size.width * 0.8,
+                              decoration: BoxDecoration(
+                                  color: inner,
+                                  borderRadius: BorderRadius.circular(10)),
+                              margin: const EdgeInsets.fromLTRB(0, 60, 5, 5),
+                              child: TextField(
+                                controller: searchController,
+                                onChanged: (value) {
+                                  onSearch(value);
+                                },
+                                decoration: InputDecoration(
+                                  hintText: "Search",
+                                  border: OutlineInputBorder(),
+                                  fillColor: inner,
+                                ),
+                              )))
+                    ]))),
+      ],
+    );
   }
 }

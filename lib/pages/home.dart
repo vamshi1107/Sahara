@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/assests/colors.dart';
-import 'package:myapp/components/topbar.dart';
-import 'package:myapp/components/topbar_secondary.dart';
 
 import 'search.dart';
 
