@@ -25,43 +25,45 @@ class ItemState extends State<Item> {
       margin: EdgeInsets.fromLTRB(5, 5, 5, 0),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(7),
-          color: itemInner,
-          border: Border.all(color: itemBorder, width: 1)),
+          border: Border.all(color: itemBorder, width: 1.3)),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
             width: 150,
             height: 150,
             margin: EdgeInsets.all(10),
-            child: Image.network(
-              i.images[0],
-            ),
+            child: Hero(
+                tag: i.id,
+                child: Image.network(
+                  i.images[0],
+                  fit: BoxFit.contain,
+                )),
           ),
           Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                i.brand,
-                style: const TextStyle(
-                    fontSize: 15,
+              Container(
+                width: 200,
+                child: Text(
+                  i.name,
+                  overflow: TextOverflow.fade,
+                  maxLines: 3,
+                  softWrap: true,
+                  style: const TextStyle(
+                    fontSize: 17,
                     fontWeight: FontWeight.bold,
-                    fontStyle: FontStyle.normal),
-              ),
-              Text(
-                i.name,
-                style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    fontStyle: FontStyle.normal),
+                    fontStyle: FontStyle.normal,
+                  ),
+                ),
               ),
               const SizedBox(height: 25),
               Text(
-                i.price,
+                "Rs " + i.price,
                 style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                    fontWeight: FontWeight.normal,
                     fontStyle: FontStyle.normal),
               ),
               SizedBox(

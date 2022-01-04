@@ -18,4 +18,4 @@ Color iconColor = Colors.black;
 
 //Elements
 Color itemInner = Color.fromRGBO(220, 220, 220, 99);
-Color itemBorder = Color.fromRGBO(220, 220, 220, 99);
+Color itemBorder = Colors.black54;
