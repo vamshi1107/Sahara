@@ -100,11 +100,10 @@ class _LoginState extends State<Login> {
   }
 
   void logUser() async {
-    var api = API();
     String user = _username.text.toString();
     String pass = _password.text.toString();
     if (user.length > 4 && pass.length > 6) {
-      await api.userLogin({"user": user, "pass": pass}).then((value) async {
+      await API.userLogin({"user": user, "pass": pass}).then((value) async {
         if (value["user"] != null) {
           save(value).then((value) {
             Navigator.pushReplacement(context,

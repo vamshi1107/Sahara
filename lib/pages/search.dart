@@ -1,9 +1,8 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:myapp/api/client.dart';
 import 'package:myapp/assests/colors.dart';
 import 'package:myapp/components/item.dart';
+import 'package:myapp/components/item_shimmer.dart';
 import 'package:myapp/components/search_topbar.dart';
 import 'package:myapp/models/product.dart';
 
@@ -22,9 +21,9 @@ class SearchState extends State<Search> {
 
   TextEditingController searchController = new TextEditingController();
 
-  var _api = API();
-
   List products = [];
+
+  bool loading = false;
 
   @override
   void initState() {
@@ -40,10 +39,16 @@ class SearchState extends State<Search> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Column(children: [
-      topBar(),
-      Expanded(
-          child: CustomScrollView(
+        body: Container(
+            color: Colors.blueGrey.shade100,
+            child: Column(children: [topBar(), Expanded(child: body())])));
+  }
+
+  Widget body() {
+    if (loading) {
+      return ItemShimmer();
+    } else {
+      return CustomScrollView(
         slivers: [
           SliverList(
               delegate: SliverChildListDelegate(
@@ -55,8 +60,8 @@ class SearchState extends State<Search> {
             }).toList(),
           ))
         ],
-      ))
-    ]));
+      );
+    }
   }
 
   void press(BuildContext context, Product p) {
@@ -67,25 +72,14 @@ class SearchState extends State<Search> {
 
   void onSearch(var value) {
     setState(() {
-      _api.getProducts({}).then((value) {
-        products = value;
+      loading = true;
+    });
+    API.getProducts({"value": value}).then((value) {
+      setState(() {
+        searchResults = value;
+        loading = false;
       });
     });
-    if (value.replaceAll(" ", "").length > 0) {
-      var searched = products
-          .where((product) => product.name
-              .replaceAll(" ", "")
-              .toLowerCase()
-              .contains(value.replaceAll(" ", "").toLowerCase()))
-          .toList();
-      setState(() {
-        searchResults = searched;
-      });
-    } else {
-      setState(() {
-        searchResults = [];
-      });
-    }
   }
 
   Widget topBar() {
@@ -122,6 +116,11 @@ class SearchState extends State<Search> {
                               child: TextField(
                                 controller: searchController,
                                 onChanged: (value) {},
+                                textInputAction: TextInputAction.go,
+                                onSubmitted: (value) {
+                                  onSearch(
+                                      searchController.value.text.toString());
+                                },
                                 decoration: InputDecoration(
                                   hintText: "Search",
                                   fillColor: inner,

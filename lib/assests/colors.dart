@@ -19,3 +19,5 @@ Color iconColor = Colors.black;
 //Elements
 Color itemInner = Color.fromRGBO(220, 220, 220, 99);
 Color itemBorder = Colors.black54;
+
+Color snackOk = Colors.greenAccent;

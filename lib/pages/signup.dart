@@ -81,8 +81,7 @@ class _SignupState extends State<Signup> {
     String name = _name.text.toString();
     String user = _username.text.toString();
     String pass = _password.text.toString();
-    var api = API();
-    api.userSignup({"name": name, "user": user, "pass": pass}).then((value) {
+    API.userSignup({"name": name, "user": user, "pass": pass}).then((value) {
       if (value) {
         showSnackbar("Signup successfull", Colors.black);
         Navigator.pop(context);

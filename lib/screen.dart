@@ -60,6 +60,16 @@ class ScreenState extends State<Screen> {
     });
   }
 
+  List<Widget> getPages() {
+    return [
+      Home(TopBarMain()),
+      Category(TopBarMain()),
+      Account(TopBarMain()),
+      Cart(TopBarMain()),
+      Search()
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -67,14 +77,11 @@ class ScreenState extends State<Screen> {
         Container(
           width: double.infinity,
           height: MediaQuery.of(context).size.height * 0.90,
-          child: IndexedStack(
-            index: current,
-            children: pages,
-          ),
-          //   child: current < 4
-          //       ? Column(children: [TopBarSecondary(setSearch), pages[current]])
-          //       : pages[current],
-          // )
+          child: getPages()[current],
+          // child: IndexedStack(
+          //   index: current,
+          //   children: getPages(),
+          // ),
         ),
         BottomNav()
       ],

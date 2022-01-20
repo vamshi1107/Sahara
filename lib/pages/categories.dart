@@ -1,10 +1,14 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:myapp/api/client.dart';
 import 'package:myapp/assests/colors.dart';
 import 'package:myapp/components/item.dart';
+import 'package:myapp/components/item_shimmer.dart';
 import 'package:myapp/components/topbar.dart';
 import 'package:myapp/components/topbar_secondary.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:myapp/models/product.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'details.dart';
 
@@ -14,7 +18,6 @@ class Category extends StatefulWidget {
   Category(StatefulWidget this.TopBar);
   @override
   State<Category> createState() {
-    // TODO: implement createState
     return CategoryState(TopBar);
   }
 }
@@ -24,30 +27,137 @@ class CategoryState extends State<Category> {
 
   CategoryState(StatefulWidget this.TopBar) {}
 
+  late String _user;
+
   var likedResults = [];
+
+  bool loading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    load();
+  }
+
+  void load() async {
+    SharedPreferences s = await SharedPreferences.getInstance();
+    _user = s.getString("user").toString();
+    setState(() {
+      loading = true;
+    });
+    var res = await API.getLiked({"user": s.get("user")});
+
+    setState(() {
+      likedResults = res;
+      loading = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        TopBar,
-        Expanded(
-            flex: 2,
-            child: CustomScrollView(
-              slivers: [
-                SliverList(
-                    delegate: SliverChildListDelegate(
-                  likedResults.map((e) {
-                    return GestureDetector(
-                      child: Item(e),
-                      onTap: () => {press(context, e)},
-                    );
-                  }).toList(),
-                ))
-              ],
-            ))
-      ],
+    return Container(
+        color: Colors.blueGrey.shade100,
+        child: Column(
+          children: [TopBar, Expanded(flex: 2, child: body())],
+        ));
+  }
+
+  Widget body() {
+    if (loading) {
+      return ItemShimmer();
+    } else {
+      return CustomScrollView(
+        slivers: [
+          SliverToBoxAdapter(
+            child: Container(
+              height: 10,
+            ),
+          ),
+          SliverList(
+              delegate: SliverChildListDelegate(
+            likedResults.map((e) {
+              return GestureDetector(
+                child: likedItem(e),
+                onTap: () => {press(context, e)},
+              );
+            }).toList(),
+          ))
+        ],
+      );
+    }
+  }
+
+  Widget likedItem(Product i) {
+    return Container(
+      width: double.infinity,
+      margin: EdgeInsets.fromLTRB(5, 5, 5, 0),
+      padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(7),
+        color: Colors.white,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            width: 150,
+            height: 150,
+            margin: EdgeInsets.all(10),
+            child: Hero(
+                tag: i.id,
+                child: Image.network(
+                  i.images[0],
+                  fit: BoxFit.contain,
+                )),
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                width: MediaQuery.of(context).size.width * 0.50,
+                child: AutoSizeText(
+                  i.name,
+                  maxLines: 2,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    fontStyle: FontStyle.normal,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 25),
+              Text(
+                "Rs " + i.price,
+                style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.normal,
+                    fontStyle: FontStyle.normal),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              OutlinedButton(
+                onPressed: () {
+                  remove(i);
+                },
+                child: Text(
+                  "Remove",
+                  style: TextStyle(color: Colors.black),
+                ),
+              )
+            ],
+          )
+        ],
+      ),
     );
+  }
+
+  void remove(Product p) async {
+    bool res = await API.removeLiked({"user": _user, "product": p.id});
+    if (res) {
+      load();
+    }
   }
 
   void show(BuildContext context, Product p) {
@@ -61,9 +171,12 @@ class CategoryState extends State<Category> {
                 Text(
                   p.name,
                   style: TextStyle(
-                      fontSize: 20,
+                      fontSize: 16,
                       fontWeight: FontWeight.bold,
                       fontStyle: FontStyle.normal),
+                ),
+                SizedBox(
+                  height: 30,
                 ),
                 CarouselSlider.builder(
                   itemCount: p.images.length,
@@ -100,7 +213,7 @@ class CategoryState extends State<Category> {
                             MaterialStateProperty.all<Color>(Colors.grey),
                       ),
                       child: Text("Details"),
-                      onPressed: () => {this.press(context, p)},
+                      onPressed: () => {this.details(context, p)},
                     ),
                     ElevatedButton(
                       style: ButtonStyle(
@@ -108,7 +221,7 @@ class CategoryState extends State<Category> {
                             MaterialStateProperty.all<Color>(Colors.blue),
                       ),
                       child: Text("Add to Cart"),
-                      onPressed: () => {this.press(context, p)},
+                      onPressed: () => {this.details(context, p)},
                     ),
                   ],
                 )
@@ -118,9 +231,13 @@ class CategoryState extends State<Category> {
         });
   }
 
-  void press(BuildContext context, Product p) {
+  void details(BuildContext context, Product p) {
     Navigator.push(context, MaterialPageRoute(builder: (context) {
       return Details(p);
     }));
+  }
+
+  void press(BuildContext context, Product p) {
+    show(context, p);
   }
 }

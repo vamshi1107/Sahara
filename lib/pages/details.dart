@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:myapp/api/client.dart';
 import 'package:myapp/assests/colors.dart';
 import 'package:myapp/components/details_topbar.dart';
+import 'package:myapp/helpers/helper.dart';
 
 import 'package:myapp/models/product.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:pinch_zoom/pinch_zoom.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'account.dart';
 
@@ -24,6 +27,21 @@ class _DetailsState extends State<Details> {
   _DetailsState(Product this.p);
 
   @override
+  void initState() {
+    super.initState();
+    load();
+  }
+
+  void load() async {
+    SharedPreferences s = await SharedPreferences.getInstance();
+    var _user = s.getString("user").toString();
+    var isLiked = await API.isLiked({"user": _user, "product": p.id});
+    setState(() {
+      _liked = isLiked;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: Column(
@@ -41,7 +59,7 @@ class _DetailsState extends State<Details> {
                           opacity: 1.0,
                           duration: const Duration(milliseconds: 500),
                           child: Container(
-                            height: 30,
+                            height: 50,
                             margin: EdgeInsets.fromLTRB(10, 20, 10, 10),
                             child: Row(
                               children: [
@@ -49,13 +67,15 @@ class _DetailsState extends State<Details> {
                                   width: 5,
                                 ),
                                 Flexible(
+                                    flex: 3,
                                     child: Text(
-                                  p.name,
-                                  maxLines: 2,
-                                  style: TextStyle(
-                                      fontSize: 19,
-                                      fontWeight: FontWeight.normal),
-                                )),
+                                      p.name,
+                                      maxLines: 3,
+                                      softWrap: true,
+                                      style: TextStyle(
+                                          fontSize: 19,
+                                          fontWeight: FontWeight.normal),
+                                    )),
                               ],
                             ),
                           )),
@@ -120,7 +140,9 @@ class _DetailsState extends State<Details> {
                                 ),
                               ),
                               OutlinedButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  addCart();
+                                },
                                 child: Text(
                                   "Add to cart",
                                   style: TextStyle(color: Colors.black),
@@ -185,6 +207,23 @@ class _DetailsState extends State<Details> {
     ));
   }
 
+  void addCart() async {
+    SharedPreferences s = await SharedPreferences.getInstance();
+    var res = await Helper.addToCart(p.id, s.get("user").toString());
+    if (res) {
+      showSnackbar("Added to cart", Colors.greenAccent);
+    }
+  }
+
+  void showSnackbar(String msg, Color color) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Container(
+        child: Text(msg),
+      ),
+      backgroundColor: color,
+    ));
+  }
+
   Widget getDetails(var p) {
     return Container(
       margin: EdgeInsets.fromLTRB(25, 10, 25, 120),
@@ -206,10 +245,15 @@ class _DetailsState extends State<Details> {
     }).toList();
   }
 
-  void likeChanged(Product p) {
+  void likeChanged(Product p) async {
+    SharedPreferences s = await SharedPreferences.getInstance();
     setState(() {
       _liked = !_liked;
     });
-    if (_liked) {}
+    if (_liked) {
+      await API.addLiked({"product": p.id, "user": s.get("user")});
+    } else {
+      await API.removeLiked({"product": p.id, "user": s.get("user")});
+    }
   }
 }
