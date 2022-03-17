@@ -36,7 +36,7 @@ class CartState extends State<Cart> {
     load();
   }
 
-  void load() async {
+  Future<void> load() async {
     SharedPreferences s = await SharedPreferences.getInstance();
     _user = s.get("user").toString();
     setState(() {
@@ -66,24 +66,27 @@ class CartState extends State<Cart> {
     if (loading) {
       return ItemShimmer();
     } else {
-      return CustomScrollView(
-        slivers: [
-          SliverToBoxAdapter(
-            child: Container(
-              height: 10,
-            ),
+      return RefreshIndicator(
+          color: Colors.black,
+          child: CustomScrollView(
+            slivers: [
+              SliverToBoxAdapter(
+                child: Container(
+                  height: 10,
+                ),
+              ),
+              SliverList(
+                  delegate: SliverChildListDelegate(
+                cartItems.map((e) {
+                  return GestureDetector(
+                    child: CartItem(e),
+                    onTap: () => {},
+                  );
+                }).toList(),
+              ))
+            ],
           ),
-          SliverList(
-              delegate: SliverChildListDelegate(
-            cartItems.map((e) {
-              return GestureDetector(
-                child: CartItem(e),
-                onTap: () => {},
-              );
-            }).toList(),
-          ))
-        ],
-      );
+          onRefresh: load);
     }
   }
 
@@ -115,7 +118,7 @@ class CartState extends State<Cart> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                width: MediaQuery.of(context).size.width * 0.50,
+                width: MediaQuery.of(context).size.width * 0.40,
                 child: AutoSizeText(
                   i.name,
                   maxLines: 2,
@@ -145,7 +148,7 @@ class CartState extends State<Cart> {
                     counterCallback: counter,
                     increaseCallback: inc,
                     decreaseCallback: dec,
-                    minNumber: 1,
+                    minNumber: 0,
                     maxNumber: 5,
                   ),
                 ],
@@ -162,7 +165,7 @@ class CartState extends State<Cart> {
   void inc(String pid, int count) {}
 
   void dec(String pid, int count) {
-    if (count == 1) {
+    if (count == 0) {
       remove(pid);
     }
   }

@@ -39,7 +39,7 @@ class CategoryState extends State<Category> {
     load();
   }
 
-  void load() async {
+  Future<void> load() async {
     SharedPreferences s = await SharedPreferences.getInstance();
     _user = s.getString("user").toString();
     setState(() {
@@ -56,34 +56,40 @@ class CategoryState extends State<Category> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        color: Colors.blueGrey.shade100,
+        color: innerDark,
         child: Column(
           children: [TopBar, Expanded(flex: 2, child: body())],
         ));
+  }
+
+  void reload() {
+    load();
   }
 
   Widget body() {
     if (loading) {
       return ItemShimmer();
     } else {
-      return CustomScrollView(
-        slivers: [
-          SliverToBoxAdapter(
-            child: Container(
-              height: 10,
-            ),
+      return RefreshIndicator(
+          child: CustomScrollView(
+            slivers: [
+              SliverToBoxAdapter(
+                child: Container(
+                  height: 10,
+                ),
+              ),
+              SliverList(
+                  delegate: SliverChildListDelegate(
+                likedResults.map((e) {
+                  return GestureDetector(
+                    child: likedItem(e),
+                    onTap: () => {press(context, e)},
+                  );
+                }).toList(),
+              ))
+            ],
           ),
-          SliverList(
-              delegate: SliverChildListDelegate(
-            likedResults.map((e) {
-              return GestureDetector(
-                child: likedItem(e),
-                onTap: () => {press(context, e)},
-              );
-            }).toList(),
-          ))
-        ],
-      );
+          onRefresh: load);
     }
   }
 
@@ -115,7 +121,7 @@ class CategoryState extends State<Category> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                width: MediaQuery.of(context).size.width * 0.50,
+                width: MediaQuery.of(context).size.width * 0.40,
                 child: AutoSizeText(
                   i.name,
                   maxLines: 2,

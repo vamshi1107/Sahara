@@ -50,10 +50,11 @@ class ItemState extends State<Item> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                width: MediaQuery.of(context).size.width * 0.50,
+                width: MediaQuery.of(context).size.width * 0.40,
                 child: AutoSizeText(
                   i.name,
-                  maxLines: 2,
+                  maxLines: 3,
+                  minFontSize: 12,
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,

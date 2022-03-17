@@ -11,7 +11,7 @@ class ItemShimmer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Shimmer.fromColors(
-        highlightColor: Colors.grey.shade400,
+        highlightColor: Colors.grey.shade300,
         baseColor: Colors.white,
         child: Column(
           children: List.generate(3, (index) => Dummy(context)),
@@ -40,7 +40,7 @@ class ItemShimmer extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                width: MediaQuery.of(context).size.width * 0.50,
+                width: MediaQuery.of(context).size.width * 0.30,
                 child: AutoSizeText(
                   "",
                   maxLines: 2,

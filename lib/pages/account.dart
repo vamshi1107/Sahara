@@ -1,6 +1,11 @@
+import 'dart:ffi';
+
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:myapp/assests/colors.dart';
 import 'package:myapp/components/topbar_secondary.dart';
+import 'package:myapp/pages/Address.dart';
+import 'package:myapp/pages/orders.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'login.dart';
@@ -29,24 +34,9 @@ class AccountState extends State<Account> {
         flex: 2,
         child: CustomScrollView(slivers: [
           SliverToBoxAdapter(
-            child: Container(
-                width: double.infinity,
-                color: inner,
-                child: FutureBuilder(
-                  future: islogged(),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      if (snapshot.data == true) {
-                        return layout();
-                      } else {
-                        return notLogged();
-                      }
-                    } else {
-                      return notLogged();
-                    }
-                  },
-                )),
-          )
+              child: Container(
+            child: layout(),
+          ))
         ]),
       )
     ]);
@@ -100,13 +90,59 @@ class AccountState extends State<Account> {
     );
   }
 
+  Future<String?> getName() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    return pref.getString("name");
+  }
+
   Widget layout() {
     return Column(
       children: [
         Container(
           width: double.infinity,
-          height: 600,
+          height: 700,
           color: inner,
+          child: Column(
+            children: [
+              Container(
+                  height: 150,
+                  width: double.infinity,
+                  padding: EdgeInsets.all(10),
+                  color: innerDark,
+                  child: Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 50,
+                        backgroundColor: Colors.black,
+                      ),
+                      SizedBox(
+                        width: 30,
+                      ),
+                      FutureBuilder(
+                        future: getName(),
+                        builder: (context, snap) {
+                          if (snap.hasData) {
+                            return RichText(
+                                text: TextSpan(
+                                    style: TextStyle(
+                                        fontSize: 20, color: Colors.black),
+                                    children: [
+                                  TextSpan(
+                                      text: snap.data.toString().toUpperCase(),
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold)),
+                                ]));
+                          } else {
+                            return Text("");
+                          }
+                        },
+                      )
+                    ],
+                  )),
+              getSub(context, "Orders", Orders()),
+              getSub(context, "Address", Address()),
+            ],
+          ),
         ),
         MaterialButton(
           color: Colors.black,
@@ -117,7 +153,7 @@ class AccountState extends State<Account> {
             child: Center(
                 child: Text(
               "Logout",
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(color: Colors.white, fontSize: 16),
             )),
             height: 50,
             width: MediaQuery.of(context).size.width * 0.85,
@@ -126,4 +162,31 @@ class AccountState extends State<Account> {
       ],
     );
   }
+}
+
+void move(BuildContext context, Widget page) {
+  Navigator.push(context, MaterialPageRoute(builder: (context) {
+    return page;
+  }));
+}
+
+Widget getSub(BuildContext context, String text, Widget page) {
+  return GestureDetector(
+    onTap: () => move(context, page),
+    child: Container(
+      height: 70,
+      width: double.infinity,
+      padding: EdgeInsets.fromLTRB(20, 0, 10, 0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(text, style: TextStyle(fontSize: 16)),
+          Icon(Icons.arrow_right_outlined)
+        ],
+      ),
+      decoration: BoxDecoration(
+          border: Border(bottom: BorderSide(color: Colors.black12, width: 1))),
+    ),
+  );
 }

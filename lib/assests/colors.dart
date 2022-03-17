@@ -21,3 +21,5 @@ Color itemInner = Color.fromRGBO(220, 220, 220, 99);
 Color itemBorder = Colors.black54;
 
 Color snackOk = Colors.greenAccent;
+
+Color innerDark = Colors.blueGrey.shade100;
