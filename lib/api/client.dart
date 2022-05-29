@@ -5,7 +5,9 @@ import 'package:http/http.dart';
 import 'package:myapp/models/product.dart';
 
 class API {
-  static var url = "https://myserver1107.herokuapp.com/sahara/";
+  // static var url = "https://myserver1107.herokuapp.com/sahara/";
+  static var url = "http://localhost:9000/sahara/";
+
   static var headers = {
     "accept": "application/json",
     "content-type": "application/json"
@@ -96,6 +98,17 @@ class API {
 
   static Future<bool> isLiked(var body) async {
     var response = await post(Uri.parse(url + "isliked"),
+        body: jsonEncode(body), headers: headers);
+    var result = jsonDecode(response.body.toString());
+    if (result["result"]) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  static Future<bool> changeQuantity(var body) async {
+    var response = await post(Uri.parse(url + "changequantity"),
         body: jsonEncode(body), headers: headers);
     var result = jsonDecode(response.body.toString());
     if (result["result"]) {

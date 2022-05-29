@@ -101,6 +101,7 @@ class ItemState extends State<Item> {
 
   void showSnackbar(String msg, Color color) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      duration: Duration(milliseconds: 500),
       content: Container(
         child: Text(msg),
       ),

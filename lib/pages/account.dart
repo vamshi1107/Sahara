@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:myapp/assests/colors.dart';
@@ -100,7 +98,7 @@ class AccountState extends State<Account> {
       children: [
         Container(
           width: double.infinity,
-          height: 700,
+          height: 600,
           color: inner,
           child: Column(
             children: [
@@ -128,7 +126,7 @@ class AccountState extends State<Account> {
                                         fontSize: 20, color: Colors.black),
                                     children: [
                                   TextSpan(
-                                      text: snap.data.toString().toUpperCase(),
+                                      text: "Hello, " + snap.data.toString(),
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold)),
                                 ]));
@@ -141,6 +139,8 @@ class AccountState extends State<Account> {
                   )),
               getSub(context, "Orders", Orders()),
               getSub(context, "Address", Address()),
+              getSub(context, "Details", Address()),
+              getSub(context, "Settings", Address()),
             ],
           ),
         ),

@@ -9,6 +9,7 @@ import 'package:myapp/components/topbar.dart';
 import 'package:myapp/models/product.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 
 class Cart extends StatefulWidget {
   StatefulWidget TopBar;
@@ -29,6 +30,8 @@ class CartState extends State<Cart> {
   var cartItems = [];
   late String _user;
   bool loading = false;
+  double total = 0;
+  var pricelist = {};
 
   @override
   void initState() {
@@ -46,6 +49,29 @@ class CartState extends State<Cart> {
     setState(() {
       cartItems = res;
       loading = false;
+    });
+    buildList();
+    calculate();
+  }
+
+  void buildList() {
+    pricelist = {};
+    cartItems.forEach((e) {
+      pricelist[e.id] = {"quantity": e.quantity, "price": e.price};
+    });
+    calculate();
+  }
+
+  void calculate() {
+    double t = 0;
+    var s = "";
+    pricelist.forEach((key, p) {
+      s = p["price"].toString();
+      s = s.replaceAll(",", "").replaceAll(" ", "");
+      t += int.parse(p["quantity"]) * double.parse(s);
+    });
+    setState(() {
+      total = t;
     });
   }
 
@@ -90,6 +116,47 @@ class CartState extends State<Cart> {
     }
   }
 
+  void ImageOpen(List<String> urls) {
+    ImageClose();
+    ScaffoldMessenger.of(context).showMaterialBanner(MaterialBanner(
+        content: Container(
+            height: 500,
+            padding: EdgeInsets.all(5),
+            child: CarouselSlider.builder(
+              itemCount: urls.length,
+              options: CarouselOptions(
+                  enlargeCenterPage: true,
+                  height: 350,
+                  pauseAutoPlayInFiniteScroll: true,
+                  reverse: false,
+                  enableInfiniteScroll: true,
+                  autoPlay: true,
+                  autoPlayAnimationDuration: Duration(milliseconds: 300)),
+              itemBuilder: (context, i, r) {
+                return Container(
+                    height: 250,
+                    width: 250,
+                    child: Image.network(
+                      urls[i],
+                      fit: BoxFit.contain,
+                    ));
+              },
+            )),
+        actions: [
+          Container(
+              child: MaterialButton(
+            child: Icon(Icons.close),
+            onPressed: () {
+              ImageClose();
+            },
+          ))
+        ]));
+  }
+
+  void ImageClose() {
+    ScaffoldMessenger.of(context).removeCurrentMaterialBanner();
+  }
+
   Widget CartItem(Product i) {
     return Container(
       width: double.infinity,
@@ -108,10 +175,12 @@ class CartState extends State<Cart> {
             margin: EdgeInsets.all(10),
             child: Hero(
                 tag: i.id,
-                child: Image.network(
-                  i.images[0],
-                  fit: BoxFit.contain,
-                )),
+                child: GestureDetector(
+                    onTap: () => ImageOpen(i.images),
+                    child: Image.network(
+                      i.images[0],
+                      fit: BoxFit.contain,
+                    ))),
           ),
           Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -162,11 +231,24 @@ class CartState extends State<Cart> {
 
   void counter(String pid, int count) {}
 
-  void inc(String pid, int count) {}
+  void change(String pid, int count) async {
+    SharedPreferences s = await SharedPreferences.getInstance();
+    _user = s.get("user").toString();
+    var res = await API.changeQuantity(
+        {"user": _user, "product": pid, "value": count.toString()});
+    pricelist[pid]["quantity"] = count.toString();
+    calculate();
+  }
+
+  void inc(String pid, int count) async {
+    change(pid, count);
+  }
 
   void dec(String pid, int count) {
     if (count == 0) {
       remove(pid);
+    } else {
+      change(pid, count);
     }
   }
 
@@ -178,17 +260,38 @@ class CartState extends State<Cart> {
   }
 
   Widget Buy() {
+    var dwidth = MediaQuery.of(context).size.width;
     return Container(
-        width: double.infinity,
-        height: 50,
-        margin: EdgeInsets.all(10),
-        child: MaterialButton(
-          onPressed: () {},
-          child: Text(
-            "Proceed to buy",
-            style: TextStyle(color: Colors.white),
+      width: double.infinity,
+      height: 100,
+      color: primary,
+      padding: EdgeInsets.all(10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          Container(
+            width: dwidth * 0.4,
+            child: Center(
+              child: Text(
+                "Rs:" + total.toString(),
+                style: TextStyle(fontSize: 24),
+              ),
+            ),
           ),
-          color: Colors.black,
-        ));
+          MaterialButton(
+              onPressed: () {},
+              color: Colors.black,
+              height: 60,
+              minWidth: dwidth * 0.45,
+              elevation: 10.0,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(22.0)),
+              child: Text(
+                "Proceed to Buy",
+                style: TextStyle(color: Colors.white),
+              ))
+        ],
+      ),
+    );
   }
 }

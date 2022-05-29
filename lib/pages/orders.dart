@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/assests/colors.dart';
+import 'package:myapp/pages/OrderCard.dart';
 
 class Orders extends StatefulWidget {
   Orders({Key? key}) : super(key: key);
@@ -11,8 +12,14 @@ class Orders extends StatefulWidget {
 class _OrdersState extends State<Orders> {
   @override
   Widget build(BuildContext context) {
+    return makepage([OrderCard(), OrderCard(), OrderCard(), OrderCard()]);
+  }
+
+  Widget makepage(List<Widget> list) {
     return Scaffold(
-      body: Column(children: [
+        body: Container(
+      color: Colors.blueGrey.shade100,
+      child: Column(children: [
         Container(
             width: double.infinity,
             height: 110,
@@ -32,10 +39,14 @@ class _OrdersState extends State<Orders> {
             )),
         Expanded(
           flex: 2,
-          child: CustomScrollView(
-              slivers: [SliverToBoxAdapter(child: Container())]),
+          child: CustomScrollView(slivers: [
+            SliverToBoxAdapter(
+                child: Column(
+              children: list,
+            ))
+          ]),
         )
       ]),
-    );
+    ));
   }
 }

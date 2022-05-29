@@ -7,6 +7,7 @@ import 'package:myapp/components/item_shimmer.dart';
 import 'package:myapp/components/topbar.dart';
 import 'package:myapp/components/topbar_secondary.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:myapp/helpers/helper.dart';
 import 'package:myapp/models/product.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -227,7 +228,7 @@ class CategoryState extends State<Category> {
                             MaterialStateProperty.all<Color>(Colors.blue),
                       ),
                       child: Text("Add to Cart"),
-                      onPressed: () => {this.details(context, p)},
+                      onPressed: () => {this.addCart(p.id)},
                     ),
                   ],
                 )
@@ -235,6 +236,24 @@ class CategoryState extends State<Category> {
             ),
           );
         });
+  }
+
+  void addCart(String id) async {
+    SharedPreferences s = await SharedPreferences.getInstance();
+    var res = await Helper.addToCart(id, s.get("user").toString());
+    if (res) {
+      showSnackbar("Added to cart", Colors.greenAccent);
+    }
+  }
+
+  void showSnackbar(String msg, Color color) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      duration: Duration(milliseconds: 500),
+      content: Container(
+        child: Text(msg),
+      ),
+      backgroundColor: color,
+    ));
   }
 
   void details(BuildContext context, Product p) {

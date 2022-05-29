@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/assests/colors.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 
 import 'search.dart';
 
@@ -23,9 +24,39 @@ class HomeState extends State<Home> {
     Navigator.push(context, MaterialPageRoute(builder: (context) => Search()));
   }
 
+  List<String> home_images = [
+    "https://images.tech.co/wp-content/uploads/2021/05/28104036/iphone-12-colors.jpg"
+  ];
+
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return makepage([
+      CarouselSlider.builder(
+        itemCount: home_images.length,
+        options: CarouselOptions(
+            enlargeCenterPage: true,
+            height: 250,
+            pauseAutoPlayInFiniteScroll: true,
+            reverse: false,
+            enableInfiniteScroll: true,
+            autoPlay: true,
+            autoPlayAnimationDuration: Duration(milliseconds: 300)),
+        itemBuilder: (context, i, r) {
+          return Container(
+              height: 250,
+              width: double.infinity,
+              child: Image.network(
+                home_images[i],
+                fit: BoxFit.cover,
+              ));
+        },
+      ),
+    ]);
+  }
+
+  Widget makepage(List<Widget> list) {
+    return Scaffold(
+        body: Column(
       children: [
         TopBarSecondary,
         Expanded(
@@ -34,25 +65,12 @@ class HomeState extends State<Home> {
               slivers: [
                 SliverToBoxAdapter(
                   child: Column(
-                    children: [
-                      Container(
-                        height: 300,
-                        color: Colors.green,
-                      ),
-                      Container(
-                        height: 300,
-                        color: inner,
-                      ),
-                      Container(
-                        height: 300,
-                        color: inner,
-                      )
-                    ],
+                    children: list,
                   ),
                 )
               ],
             ))
       ],
-    );
+    ));
   }
 }

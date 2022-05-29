@@ -32,10 +32,18 @@ class _AddressState extends State<Address> {
             )),
         Expanded(
           flex: 2,
-          child: CustomScrollView(
-              slivers: [SliverToBoxAdapter(child: Container())]),
+          child: CustomScrollView(slivers: [SliverToBoxAdapter(child: Body())]),
         )
       ]),
     );
+  }
+
+  Widget Body() {
+    return Container(
+        child: Column(children: [
+      Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [IconButton(onPressed: () {}, icon: Icon(Icons.add))])
+    ]));
   }
 }
