@@ -25,12 +25,13 @@ class TopBarState extends State<TopBar> {
             child: Container(
                 width: double.infinity,
                 height: 110,
-                color: primary,
+                color: AppColors.primary,
                 child: Container(
                     decoration: BoxDecoration(
-                        color: inner,
+                        color: AppColors.inner,
                         borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: itemBorder, width: 1)),
+                        border:
+                            Border.all(color: AppColors.itemBorder, width: 1)),
                     margin: const EdgeInsets.fromLTRB(5, 60, 5, 5),
                     child: InkWell(
                         onTap: () => {openSearch(context)},

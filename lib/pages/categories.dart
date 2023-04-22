@@ -5,7 +5,7 @@ import 'package:myapp/assests/colors.dart';
 import 'package:myapp/components/item.dart';
 import 'package:myapp/components/item_shimmer.dart';
 import 'package:myapp/components/topbar.dart';
-import 'package:myapp/components/topbar_secondary.dart';
+import 'package:myapp/components/topbar_main.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:myapp/helpers/helper.dart';
 import 'package:myapp/models/product.dart';
@@ -14,19 +14,15 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'details.dart';
 
 class Category extends StatefulWidget {
-  StatefulWidget TopBar;
-
-  Category(StatefulWidget this.TopBar);
+  Category();
   @override
   State<Category> createState() {
-    return CategoryState(TopBar);
+    return CategoryState();
   }
 }
 
 class CategoryState extends State<Category> {
-  StatefulWidget TopBar;
-
-  CategoryState(StatefulWidget this.TopBar) {}
+  CategoryState() {}
 
   late String _user;
 
@@ -57,9 +53,9 @@ class CategoryState extends State<Category> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        color: innerDark,
+        color: AppColors.innerDark,
         child: Column(
-          children: [TopBar, Expanded(flex: 2, child: body())],
+          children: [TopBarMain(), Expanded(flex: 2, child: body())],
         ));
   }
 

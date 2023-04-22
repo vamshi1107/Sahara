@@ -6,26 +6,24 @@ import 'package:myapp/components/counter_view.dart';
 import 'package:myapp/components/item.dart';
 import 'package:myapp/components/item_shimmer.dart';
 import 'package:myapp/components/topbar.dart';
+import 'package:myapp/components/topbar_main.dart';
 import 'package:myapp/models/product.dart';
+import 'package:myapp/pages/buy.dart';
+import 'package:myapp/states/CurrentPage.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
 class Cart extends StatefulWidget {
-  StatefulWidget TopBar;
-
-  Cart(StatefulWidget this.TopBar);
-
   @override
   State<Cart> createState() {
-    return CartState(TopBar);
+    return CartState();
   }
 }
 
 class CartState extends State<Cart> {
-  StatefulWidget TopBar;
-
-  CartState(StatefulWidget this.TopBar) {}
+  CartState() {}
 
   var cartItems = [];
   late String _user;
@@ -81,7 +79,7 @@ class CartState extends State<Cart> {
         color: Colors.blueGrey.shade100,
         child: Column(
           children: [
-            TopBar,
+            TopBarMain(),
             Expanded(flex: 2, child: body()),
             Buy(),
           ],
@@ -118,39 +116,33 @@ class CartState extends State<Cart> {
 
   void ImageOpen(List<String> urls) {
     ImageClose();
-    ScaffoldMessenger.of(context).showMaterialBanner(MaterialBanner(
-        content: Container(
-            height: 500,
-            padding: EdgeInsets.all(5),
-            child: CarouselSlider.builder(
-              itemCount: urls.length,
-              options: CarouselOptions(
-                  enlargeCenterPage: true,
-                  height: 350,
-                  pauseAutoPlayInFiniteScroll: true,
-                  reverse: false,
-                  enableInfiniteScroll: true,
-                  autoPlay: true,
-                  autoPlayAnimationDuration: Duration(milliseconds: 300)),
-              itemBuilder: (context, i, r) {
-                return Container(
-                    height: 250,
-                    width: 250,
-                    child: Image.network(
-                      urls[i],
-                      fit: BoxFit.contain,
-                    ));
-              },
-            )),
-        actions: [
-          Container(
-              child: MaterialButton(
-            child: Icon(Icons.close),
-            onPressed: () {
-              ImageClose();
-            },
-          ))
-        ]));
+    showBottomSheet(
+        context: context,
+        builder: (context) {
+          return Container(
+              height: 500,
+              padding: EdgeInsets.all(5),
+              child: CarouselSlider.builder(
+                itemCount: urls.length,
+                options: CarouselOptions(
+                    enlargeCenterPage: true,
+                    height: 350,
+                    pauseAutoPlayInFiniteScroll: true,
+                    reverse: false,
+                    enableInfiniteScroll: true,
+                    autoPlay: true,
+                    autoPlayAnimationDuration: Duration(milliseconds: 300)),
+                itemBuilder: (context, i, r) {
+                  return Container(
+                      height: 250,
+                      width: 250,
+                      child: Image.network(
+                        urls[i],
+                        fit: BoxFit.contain,
+                      ));
+                },
+              ));
+        });
   }
 
   void ImageClose() {
@@ -264,7 +256,7 @@ class CartState extends State<Cart> {
     return Container(
       width: double.infinity,
       height: 100,
-      color: primary,
+      color: AppColors.primary,
       padding: EdgeInsets.all(10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -273,17 +265,22 @@ class CartState extends State<Cart> {
             width: dwidth * 0.4,
             child: Center(
               child: Text(
-                "Rs:" + total.toString(),
+                cartItems.length > 0 ? "Rs:" + total.toString() : "",
                 style: TextStyle(fontSize: 24),
               ),
             ),
           ),
           MaterialButton(
-              onPressed: () {},
-              color: Colors.black,
+              onPressed: () {
+                if (cartItems.length > 0) {
+                  Provider.of<CurrentPage>(context, listen: false)
+                      .changePageNo(5);
+                }
+              },
+              color: cartItems.length > 0 ? Colors.black : Colors.black26,
               height: 60,
               minWidth: dwidth * 0.45,
-              elevation: 10.0,
+              elevation: cartItems.length > 0 ? 10 : 0,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(22.0)),
               child: Text(

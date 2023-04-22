@@ -1,25 +1,29 @@
 import 'package:flutter/material.dart';
 
-//app
-Color primary = Colors.white;
-Color inner = Colors.white12;
+class AppColors {
+  static Color primary = Colors.white;
+  static Color inner = Colors.white12;
 
 //pages
-Color homeInner = Colors.white;
-Color SearchInner = Colors.white;
-Color CartInner = Colors.white;
+  static Color homeInner = Colors.white;
+  static Color SearchInner = Colors.white;
+  static Color CartInner = Colors.white;
 
 //Bottom navigation
-Color item = primary;
-Color itemSelected = Colors.black;
+  static Color item = Colors.white;
+  static Color itemSelected = Colors.black;
 
 //icon
-Color iconColor = Colors.black;
+  static Color iconColor = Colors.black;
 
 //Elements
-Color itemInner = Color.fromRGBO(220, 220, 220, 99);
-Color itemBorder = Colors.black54;
+  static Color itemInner = Color.fromRGBO(220, 220, 220, 99);
+  static Color itemBorder = Colors.black54;
 
-Color snackOk = Colors.greenAccent;
+  static Color snackOk = Colors.greenAccent;
 
-Color innerDark = Colors.blueGrey.shade100;
+  static Color innerDark = Colors.blueGrey.shade100;
+
+  static Color progressEnable = Colors.black;
+  static Color progressDisable = Color.fromARGB(255, 215, 214, 214);
+}

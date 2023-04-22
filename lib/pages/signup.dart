@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart';
 import 'package:myapp/api/client.dart';
+import 'package:myapp/pages/login.dart';
 
 class Signup extends StatefulWidget {
   Signup({Key? key}) : super(key: key);
@@ -56,7 +57,28 @@ class _SignupState extends State<Signup> {
                       width: MediaQuery.of(context).size.width * 0.85,
                     ),
                   ),
-                )
+                ),
+                Container(
+                    margin: EdgeInsets.all(10),
+                    child: GestureDetector(
+                        child: Container(
+                          child: Center(
+                              child: Text(
+                            "Already have account",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 16,
+                            ),
+                          )),
+                          height: 50,
+                          width: MediaQuery.of(context).size.width * 0.85,
+                        ),
+                        onTap: () {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            return Login();
+                          }));
+                        }))
               ],
             ),
           )

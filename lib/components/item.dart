@@ -95,7 +95,7 @@ class ItemState extends State<Item> {
     SharedPreferences s = await SharedPreferences.getInstance();
     var res = await Helper.addToCart(i.id, s.get("user").toString());
     if (res) {
-      showSnackbar("Added to cart", snackOk);
+      showSnackbar("Added to cart", AppColors.snackOk);
     }
   }
 

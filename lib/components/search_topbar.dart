@@ -29,7 +29,7 @@ class SearchTopBarState extends State<SearchTopBar> {
             child: Container(
                 width: double.infinity,
                 height: 110,
-                color: primary,
+                color: AppColors.primary,
                 child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -50,14 +50,14 @@ class SearchTopBarState extends State<SearchTopBar> {
                           child: Container(
                               width: MediaQuery.of(context).size.width * 0.8,
                               decoration: BoxDecoration(
-                                  color: inner,
+                                  color: AppColors.inner,
                                   borderRadius: BorderRadius.circular(10)),
                               margin: const EdgeInsets.fromLTRB(0, 60, 5, 5),
                               child: TextField(
                                 decoration: InputDecoration(
                                   hintText: "Search",
                                   border: OutlineInputBorder(),
-                                  fillColor: inner,
+                                  fillColor: AppColors.inner,
                                 ),
                               )))
                     ]))),

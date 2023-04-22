@@ -1,7 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:myapp/assests/colors.dart';
-import 'package:myapp/components/topbar_secondary.dart';
+import 'package:myapp/components/topbar_main.dart';
 import 'package:myapp/pages/Address.dart';
 import 'package:myapp/pages/orders.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -9,25 +9,21 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'login.dart';
 
 class Account extends StatefulWidget {
-  StatefulWidget TopBar;
-
-  Account(StatefulWidget this.TopBar);
+  Account();
   @override
   State<Account> createState() {
     // TODO: implement createState
-    return AccountState(TopBar);
+    return AccountState();
   }
 }
 
 class AccountState extends State<Account> {
-  StatefulWidget TopBar;
-
-  AccountState(StatefulWidget this.TopBar) {}
+  AccountState() {}
 
   @override
   Widget build(BuildContext context) {
     return Column(children: [
-      TopBar,
+      TopBarMain(),
       Expanded(
         flex: 2,
         child: CustomScrollView(slivers: [
@@ -67,7 +63,7 @@ class AccountState extends State<Account> {
     return Container(
       width: double.infinity,
       height: 600,
-      color: inner,
+      color: AppColors.inner,
       child: Center(
         child: MaterialButton(
           color: Colors.black,
@@ -99,14 +95,14 @@ class AccountState extends State<Account> {
         Container(
           width: double.infinity,
           height: 600,
-          color: inner,
+          color: AppColors.inner,
           child: Column(
             children: [
               Container(
                   height: 150,
                   width: double.infinity,
                   padding: EdgeInsets.all(10),
-                  color: innerDark,
+                  color: AppColors.innerDark,
                   child: Row(
                     children: [
                       CircleAvatar(
@@ -140,7 +136,6 @@ class AccountState extends State<Account> {
               getSub(context, "Orders", Orders()),
               getSub(context, "Address", Address()),
               getSub(context, "Details", Address()),
-              getSub(context, "Settings", Address()),
             ],
           ),
         ),

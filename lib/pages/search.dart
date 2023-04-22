@@ -53,6 +53,7 @@ class SearchState extends State<Search> {
           SliverList(
               delegate: SliverChildListDelegate(
             searchResults.map((e) {
+              print(e);
               return GestureDetector(
                 child: Item(e),
                 onTap: () => {press(context, e)},
@@ -78,6 +79,7 @@ class SearchState extends State<Search> {
       setState(() {
         searchResults = value;
         loading = false;
+        print(searchResults.length);
       });
     });
   }
@@ -89,7 +91,7 @@ class SearchState extends State<Search> {
             child: Container(
                 width: double.infinity,
                 height: 110,
-                color: primary,
+                color: AppColors.primary,
                 child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -110,7 +112,7 @@ class SearchState extends State<Search> {
                           child: Container(
                               width: MediaQuery.of(context).size.width * 0.9,
                               decoration: BoxDecoration(
-                                  color: inner,
+                                  color: AppColors.inner,
                                   borderRadius: BorderRadius.circular(10)),
                               margin: const EdgeInsets.fromLTRB(10, 60, 5, 5),
                               child: TextField(
@@ -123,7 +125,7 @@ class SearchState extends State<Search> {
                                 },
                                 decoration: InputDecoration(
                                   hintText: "Search",
-                                  fillColor: inner,
+                                  fillColor: AppColors.inner,
                                 ),
                               ))),
                       Flexible(

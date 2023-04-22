@@ -3,33 +3,27 @@ import 'package:myapp/assests/colors.dart';
 
 import '../pages/search.dart';
 
-class TopBarSecondary extends StatefulWidget {
-  void Function() setSearch;
-
-  TopBarSecondary(void Function() this.setSearch);
-
+class TopBarMain extends StatefulWidget {
   @override
-  State<TopBarSecondary> createState() {
-    return TopBarSecondarytate(setSearch);
+  State<TopBarMain> createState() {
+    return TopBarMainState();
   }
 }
 
-class TopBarSecondarytate extends State<TopBarSecondary> {
-  void Function() setSearch;
-
-  TopBarSecondarytate(void Function() this.setSearch);
+class TopBarMainState extends State<TopBarMain> {
+  TopBarMainState();
 
   void openSearch(BuildContext context) {
-    setSearch();
+    Navigator.push(context, MaterialPageRoute(builder: (context) => Search()));
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      height: 100,
-      color: primary,
-      padding: EdgeInsets.fromLTRB(10, 30, 15, 0),
+      height: MediaQuery.of(context).size.height * 0.12,
+      color: AppColors.primary,
+      padding: EdgeInsets.fromLTRB(15, 30, 15, 0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,

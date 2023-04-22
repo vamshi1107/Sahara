@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:http/http.dart';
+import 'package:myapp/models/address.dart';
 import 'package:myapp/models/product.dart';
 
 class API {
@@ -74,6 +75,13 @@ class API {
     return result["result"].map((json) => Product.fromJson(json)).toList();
   }
 
+  static Future<dynamic> getOrders(var body) async {
+    var response = await post(Uri.parse(url + "getorders"),
+        body: jsonEncode(body), headers: headers);
+    var result = jsonDecode(response.body.toString());
+    return result["result"];
+  }
+
   static Future<bool> removeCart(var body) async {
     var response = await post(Uri.parse(url + "removecart"),
         body: jsonEncode(body), headers: headers);
@@ -112,6 +120,35 @@ class API {
         body: jsonEncode(body), headers: headers);
     var result = jsonDecode(response.body.toString());
     if (result["result"]) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  static Future<dynamic> getAddress(var body) async {
+    var response = await post(Uri.parse(url + "getaddresses"),
+        body: jsonEncode(body), headers: headers);
+    var result = jsonDecode(response.body.toString());
+    return result["result"] ? result["data"].toList() : [];
+  }
+
+  static Future<bool> addAddress(var body) async {
+    var response = await post(Uri.parse(url + "addaddress"),
+        body: jsonEncode(body), headers: headers);
+    var result = jsonDecode(response.body.toString());
+    if (result["count"] > 0) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  static Future<bool> placeOrder(var body) async {
+    var response = await post(Uri.parse(url + "placeorder"),
+        body: jsonEncode(body), headers: headers);
+    var result = jsonDecode(response.body.toString());
+    if (result["result"] && result["count"] > 0) {
       return true;
     } else {
       return false;

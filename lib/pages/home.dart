@@ -1,24 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/assests/colors.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:myapp/components/topbar_main.dart';
 
 import 'search.dart';
 
 class Home extends StatefulWidget {
-  StatefulWidget TopBarSecondary;
-
-  Home(StatefulWidget this.TopBarSecondary);
+  Home();
 
   @override
   State<Home> createState() {
-    return HomeState(TopBarSecondary);
+    return HomeState();
   }
 }
 
 class HomeState extends State<Home> {
-  StatefulWidget TopBarSecondary;
-
-  HomeState(StatefulWidget this.TopBarSecondary) {}
+  HomeState() {}
 
   void openSearch(BuildContext context) {
     Navigator.push(context, MaterialPageRoute(builder: (context) => Search()));
@@ -43,12 +40,13 @@ class HomeState extends State<Home> {
             autoPlayAnimationDuration: Duration(milliseconds: 300)),
         itemBuilder: (context, i, r) {
           return Container(
-              height: 250,
-              width: double.infinity,
-              child: Image.network(
-                home_images[i],
-                fit: BoxFit.cover,
-              ));
+            height: 240,
+            width: double.infinity,
+            child: Image.network(
+              home_images[i],
+              fit: BoxFit.fitHeight,
+            ),
+          );
         },
       ),
     ]);
@@ -58,7 +56,7 @@ class HomeState extends State<Home> {
     return Scaffold(
         body: Column(
       children: [
-        TopBarSecondary,
+        TopBarMain(),
         Expanded(
             flex: 2,
             child: CustomScrollView(

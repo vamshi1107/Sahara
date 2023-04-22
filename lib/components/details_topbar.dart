@@ -29,7 +29,7 @@ class DetailsTopBarState extends State<DetailsTopBar> {
             child: Container(
           width: double.infinity,
           height: 100,
-          color: primary,
+          color: AppColors.primary,
           padding: EdgeInsets.fromLTRB(10, 30, 15, 0),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
