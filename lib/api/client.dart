@@ -6,8 +6,8 @@ import 'package:myapp/models/address.dart';
 import 'package:myapp/models/product.dart';
 
 class API {
-  // static var url = "https://myserver1107.herokuapp.com/sahara/";
-  static var url = "http://localhost:9000/sahara/";
+  static var url = "https://myserver1107.cyclic.app/sahara/";
+  // static var url = "http://localhost:9000/sahara/";
 
   static var headers = {
     "accept": "application/json",
